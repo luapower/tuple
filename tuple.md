@@ -1,6 +1,7 @@
 ---
-project: tuple
-tagline: real tuples
+project:  tuple
+tagline:  real tuples
+category: Language
 ---
 
 v1.0 | Lua 5.1, Lua 5.2, LuaJIT 2
