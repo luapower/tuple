@@ -4,8 +4,6 @@ tagline:  real tuples
 category: Language
 ---
 
-v1.0 | Lua 5.1, Lua 5.2, LuaJIT 2
-
 ## `local tuple = require'tuple'`
 
 Real tuples are immutable lists that can be used as table keys because they have value semantics, i.e. the tuple constructor returns the same identity for the exact same list of identities. If you don't need this property, [vararg vararg.pack()] is a faster and more memory efficient way to store small lists of values.
