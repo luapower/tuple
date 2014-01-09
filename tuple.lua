@@ -1,4 +1,4 @@
---n-tuple tree-based implementation; supports nils and NaNs
+--n-tuple tree-based implementation. supports nils and NaNs. (Cosmin Apreutesei, public domain).
 
 local weak_values = {__mode = 'v'}
 local pins = setmetatable({}, weak_values) --{space_kN = e}
