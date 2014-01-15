@@ -1,7 +1,6 @@
 ---
 project:  tuple
 tagline:  real tuples
-category: Language
 ---
 
 ## `local tuple = require'tuple'`
