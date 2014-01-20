@@ -1,6 +1,6 @@
 ---
-project:  tuple
-tagline:  real tuples
+project: tuple
+tagline: real tuples
 ---
 
 ## `local tuple = require'tuple'`
