@@ -9,7 +9,7 @@ Real tuples are immutable lists that can be used as table keys because they have
 
 ## `tuple(e1,...) -> t`
 
-Create or find a tuple given a list of elements. Elements can be anything, including nil and `NaN`.
+Create or find a tuple given a list of elements. Elements can be anything, including nil and NaN.
 
 ## `t() -> e1,...`
 
