@@ -15,7 +15,8 @@ Create or find a tuple given a list of elements. Elements can be anything, inclu
 
 Access the elements of a tuple.
 
-*Example:*
+### Example
+
 ~~~{.lua}
 local tuple = require'tuple'
 
@@ -27,4 +28,9 @@ print(tup())
 > a	nan	2	nil
 ~~~
 
-_*Implementation note*: all the tuple elements of all the tuples created with this function are indexed internally with a global weak hash tree. This means that creating a tuple takes N hash lookups and M table creations, where N+M is the number of elements of the tuple. Lookup time depends on how dense the tree is on the search path, which depends on how many existing tuples share a first sequence of elements with the tuple being created. In particular, creating tuples out of all permutations of a certain set of values hits the worst case for hash lookup time, but creates the minimum amount of tables relative to the number of tuples._
+> __NOTE:__ all the tuple elements of all the tuples created with this function are indexed internally
+with a global weak hash tree. This means that creating a tuple takes N hash lookups and M table creations,
+where N+M is the number of elements of the tuple. Lookup time depends on how dense the tree is on the search path,
+which depends on how many existing tuples share a first sequence of elements with the tuple being created.
+In particular, creating tuples out of all permutations of a certain set of values hits the worst case for hash
+lookup time, but creates the minimum amount of tables relative to the number of tuples.
