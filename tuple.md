@@ -5,7 +5,9 @@ tagline: real tuples
 
 ## `local tuple = require'tuple'`
 
-Real tuples are immutable lists that can be used as table keys because they have value semantics, i.e. the tuple constructor returns the same identity for the exact same list of identities. If you don't need this property, [vararg vararg.pack()] is a faster and more memory efficient way to store small lists of values.
+Tuples are immutable lists that can be used as table keys because they have value semantics,
+that is, the tuple constructor returns the same identity for the exact same list of identities.
+If you don't need this property, [vararg.pack] is a more memory efficient way to store small lists of values.
 
 ## `tuple(e1,...) -> t`
 
@@ -34,3 +36,6 @@ where N+M is the number of elements of the tuple. Lookup time depends on how den
 which depends on how many existing tuples share a first sequence of elements with the tuple being created.
 In particular, creating tuples out of all permutations of a certain set of values hits the worst case for hash
 lookup time, but creates the minimum amount of tables relative to the number of tuples.
+
+
+[vararg.pack]: vararg.html#pack
