@@ -2,6 +2,8 @@
 --n-tuple implementation based on an index tree.
 --Cosmin Apreutesei. Public domain.
 
+if not ... then require'tuple_test'; return end
+
 local weakvals_meta = {__mode = 'v'}
 
 --make a table with weak values.
@@ -38,24 +40,22 @@ local function space(weak)
 			local k = tokey(select(i,...))
 			index = index[k]
 			if not index then
-				return nil, i, n
+				return nil, n
 			end
 		end
-		return tuples[index], n, n
+		return tuples[index], n
 	end
 
 	--get a matching tuple, or make a new one and add it to the index.
 	return function(...)
-		local tuple, i0, n = find(...)
+		local tuple, n = find(...)
 		if not tuple then
 			tuple = {n = n, ...}
 			local index = index
 			for i = 1, n do
 				local k = tokey(select(i,...))
-				local t
-				if i < i0 then
-					t = index[k]
-				else
+				local t = index[k]
+				if not t then
 					t = weakvals()
 					index[k] = t
 				end
