@@ -34,6 +34,7 @@ local function space(weak)
 
 	--find a matching tuple by going through the index tree.
 	local function find(...)
+		local t = {}
 		local n = select('#',...)
 		local index = index
 		for i = 1, n do
@@ -59,7 +60,7 @@ local function space(weak)
 					t = weakvals()
 					index[k] = t
 				end
-				if weak and i > 1 and i < n then
+				if weak and i < n then
 					tuple[t] = true --anchor index table in the tuple.
 				end
 				index = t
