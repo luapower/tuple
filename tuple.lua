@@ -107,7 +107,12 @@ end
 local tuple = space(true)
 
 return setmetatable({
-	space = space,
+	space = function(...)
+		local tuple = space(...)
+		return function(...)
+			return wrap(tuple(...))
+		end
+	end,
 }, {
 	__call = function(_, ...)
 		return wrap(tuple(...))

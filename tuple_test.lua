@@ -56,6 +56,9 @@ for i=1,20 do
 	end
 end
 
-e0,e1,e2,e3,e4 = nil
+--test: tuple spaces and wrapping.
+local tuple = tuple.space(true)
+local t1 = tuple(1, 2, 3)
 collectall()
-
+assert(tuple(1, 2, 3) == t1)
+print(t1)
