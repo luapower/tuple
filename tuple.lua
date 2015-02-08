@@ -76,7 +76,7 @@ end
 local tuple = {}
 local tuple_meta = {__index = tuple, __newindex = false}
 
-function wrap(t)
+local function wrap(t)
 	return setmetatable(t, tuple_meta)
 end
 
@@ -94,6 +94,7 @@ function tuple_meta:__tostring()
 	return string.format('(%s)', table.concat(t, ', '))
 end
 
+--integration with the pp module.
 function tuple_meta:__pwrite(write, write_value)
 	write'tuple('; write_value(self[1])
 	for i=2,self.n do
