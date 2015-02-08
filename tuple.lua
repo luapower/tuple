@@ -7,13 +7,13 @@ if not ... then require'tuple_test'; return end
 local weakvals_meta = {__mode = 'v'}
 
 --make a table with weak values.
-local function weakvals()
-	return setmetatable({}, weakvals_meta)
+local function weakvals(t)
+	return setmetatable(t or {}, weakvals_meta)
 end
 
 --make a table with strong values, i.e. make a table.
-local function strongvals()
-	return {}
+local function strongvals(t)
+	return t or {}
 end
 
 --convert nils and NaNs to be used as table keys.
@@ -26,11 +26,11 @@ end
 --make a new tuple space, with weak or strong references.
 --using strong references is faster but dead tuples won't get collected
 --until the space is released.
-local function space(weak)
+local function space(weak, index, tuples)
 
 	local weakvals = weak and weakvals or strongvals
-	local index = weakvals() --{k1 = index1}; index1 = {k2 = index2}
-	local tuples = weakvals() --{index1 = tuple(k1), index2 = tuple(k1, k2)}
+	index = weakvals(index) --{k1 = index1}; index1 = {k2 = index2}
+	tuples = weakvals(tuples) --{index1 = tuple(k1), index2 = tuple(k1, k2)}
 
 	--find a matching tuple by going through the index tree.
 	local function find(...)
