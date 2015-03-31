@@ -62,3 +62,18 @@ local t1 = tuple(1, 2, 3)
 collectall()
 assert(tuple(1, 2, 3) == t1)
 print(t1)
+
+--test: tuple from array: allow for easy creation of sparse tuples
+local t = tuple.from_array{n = 3}
+assert(t == tuple(nil, nil, nil))
+
+--test: tuple with fixed number of elements
+local t = tuple.narg(3)
+assert(t == tuple.narg(3, nil))
+assert(t == tuple.narg(3, nil, nil))
+assert(t == tuple(nil, nil, nil))
+
+local t = tuple.narg(3, 1)
+assert(t == tuple.narg(3, 1, nil))
+assert(t == tuple.narg(3, 1, nil, nil))
+assert(t == tuple(1, nil, nil))

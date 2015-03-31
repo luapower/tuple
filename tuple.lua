@@ -33,42 +33,64 @@ local function space(weak, index, tuples)
 	tuples = weakvals(tuples) --{index1 = tuple(k1), index2 = tuple(k1, k2)}
 
 	--find a matching tuple by going through the index tree.
-	local function find(...)
+	local function find(n, ...)
 		local t = {}
-		local n = select('#',...)
 		local index = index
 		for i = 1, n do
-			local k = tokey(select(i,...))
+			local k = tokey(select(i, ...))
 			index = index[k]
 			if not index then
-				return nil, n
+				return
 			end
 		end
-		return tuples[index], n
+		return tuples[index]
+	end
+
+	--add a new tuple to the index tree.
+	local function add(n, tuple)
+		local index = index
+		for i = 1, n do
+			local k = tokey(tuple[i])
+			local t = index[k]
+			if not t then
+				t = weakvals()
+				index[k] = t
+			end
+			if weak and i < n then
+				tuple[t] = true --anchor index table in the tuple.
+			end
+			index = t
+		end
+		tuples[index] = tuple
+		return tuple
 	end
 
 	--get a matching tuple, or make a new one and add it to the index.
-	return function(...)
-		local tuple, n = find(...)
+	local function tuple_vararg(...)
+		local n = select('#', ...)
+		return find(n, ...) or add(n, {n = n, ...})
+	end
+
+	--same as above, but for a fixed number of elements.
+	local function tuple_narg(n, ...)
+		local tuple = find(n, ...)
 		if not tuple then
-			tuple = {n = n, ...}
-			local index = index
+			tuple = {n = n}
 			for i = 1, n do
-				local k = tokey(select(i,...))
-				local t = index[k]
-				if not t then
-					t = weakvals()
-					index[k] = t
-				end
-				if weak and i < n then
-					tuple[t] = true --anchor index table in the tuple.
-				end
-				index = t
+				tuple[i] = select(i, ...)
 			end
-			tuples[index] = tuple
+			tuple = add(n, tuple)
 		end
 		return tuple
 	end
+
+	--same as above, but using a table as input.
+	local function tuple_array(tuple)
+		local n = tuple.n or #tuple
+		return find(n, unpack(tuple, 1, n)) or add(n, tuple)
+	end
+
+	return tuple_vararg, tuple_narg, tuple_array
 end
 
 --tuple class
@@ -103,20 +125,27 @@ function tuple_meta:__pwrite(write, write_value)
 	write')'
 end
 
---default weak tuple space and tuple module
+--tuple space module
 
-local tuple = space(true)
+local space_module
 
-return setmetatable({
-	space = function(...)
-		local tuple = space(...)
-		return function(...)
-			return wrap(tuple(...))
+function space_module(weak)
+	local tuple_vararg, tuple_narg, tuple_array = space(weak)
+	return setmetatable({
+		space = space_module,
+		narg = function(n, ...)
+			return wrap(tuple_narg(n, ...))
+		end,
+		from_array = function(t)
+			return wrap(tuple_array(t))
+		end,
+	}, {
+		__call = function(_, ...)
+			return wrap(tuple_vararg(...))
 		end
-	end,
-}, {
-	__call = function(_, ...)
-		return wrap(tuple(...))
-	end
-})
+	})
+end
 
+--default weak tuple space module
+
+return space_module(true)

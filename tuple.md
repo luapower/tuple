@@ -12,15 +12,17 @@ for the exact same list of identities. If you don't need this property,
 
 [vararg.pack]: vararg.html#pack
 
--------------------------------- ---------------------------------------------
-`tuple(e1,...) -> t`					create/find a tuple
-`t([i[, j]) -> e1,...`				unpack elements
-`t[i] -> ei`							access elements
-`t.n`										number of elements
-`tostring(t) -> s`					string representation
-`pp.format(t) -> s`					serialization with [pp]
-`tuple.space([weak]) -> tuple`	create a new (weak or strong) tuple space
--------------------------------- ---------------------------------------------
+---------------------------------- -------------------------------------------
+`tuple(e1,...) -> t`					  get a tuple
+`tuple.narg(n,e1,...} -> t`        get a tuple with a fixed number of elements
+`tuple.from_array{n=,e1,...} -> t` get a tuple from a (sparse) array
+`t([i[, j]) -> e1,...`				  unpack elements
+`t[i] -> ei`							  access elements
+`t.n`										  number of elements
+`tostring(t) -> s`					  string representation
+`pp.format(t) -> s`					  serialization with [pp]
+`tuple.space([weak]) -> tuple`	  create a new (weak or strong) tuple space
+---------------------------------- -------------------------------------------
 
 > __NOTE:__ Tuple elements can be anything, including `nil` and `NaN`.
 
