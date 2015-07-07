@@ -77,3 +77,35 @@ local t = tuple.narg(3, 1)
 assert(t == tuple.narg(3, 1, nil))
 assert(t == tuple.narg(3, 1, nil, nil))
 assert(t == tuple(1, nil, nil))
+
+--test: leaks
+local weakvals_meta = {__mode = 'v'}
+local function weakvals(t)
+	return setmetatable(t or {}, weakvals_meta)
+end
+local function strongvals(t)
+	return t or {}
+end
+local function testleaks(weak, s)
+	local vals = weak and weakvals or strongvals
+	local index, tuples = vals(), vals()
+	local tuple = tuple.space(weak, index, tuples)
+	local before = collectgarbage'count'
+	for i=1,10^5 do
+		local a = math.floor(i / 53512) % 23
+		local b = math.floor(i / 1439) % 17
+		local c = math.floor(i / 197) % 16
+		local d = math.floor(i / 16) % 19
+		local e = i % 10
+		tuple(a, b, c, d, e)
+	end
+	collectall()
+	local after = collectgarbage'count'
+	if weak then --this is the actual test
+		assert(next(index) == nil)
+		assert(next(tuples) == nil)
+	end
+	print(string.format('leak (%s): %d KB', s, after - before))
+end
+testleaks(true, 'weak')
+testleaks(false, 'strong')

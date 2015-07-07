@@ -129,8 +129,8 @@ end
 
 local space_module
 
-function space_module(weak)
-	local tuple_vararg, tuple_narg, tuple_array = space(weak)
+function space_module(weak, ...)
+	local tuple_vararg, tuple_narg, tuple_array = space(weak, ...)
 	return setmetatable({
 		space = space_module,
 		narg = function(n, ...)
