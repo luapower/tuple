@@ -1,5 +1,4 @@
 ---
-project: tuple
 tagline: real tuples
 ---
 
