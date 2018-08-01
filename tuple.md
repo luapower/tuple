@@ -8,6 +8,8 @@ Tuples are immutable lists that can be used as table keys because they have
 value semantics, that is, the tuple constructor returns the same identity
 for the exact same list of identities.
 
+## API
+
 ---------------------------------- -------------------------------------------
 `tuple(e1,...) -> t`               get a tuple
 `tuple.narg(n,e1,...) -> t`        get a tuple with a fixed number of elements
