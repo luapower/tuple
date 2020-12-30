@@ -109,3 +109,22 @@ local function testleaks(weak, s)
 end
 testleaks(true, 'weak')
 testleaks(false, 'strong')
+
+--test: iterate & remove
+local tp = tuple.space()
+for i = 1, 1000 do
+	local t = {}
+	for j = 1, math.random(1, 10) do
+		t[j] = math.random(1, 5)
+	end
+	local t = tp.from_array(t)
+end
+local n = 0
+for t in tp.tuples() do
+	tp.remove(t)
+	n = n + 1
+end
+print(n)
+for t in tp.tuples() do
+	assert(false)
+end

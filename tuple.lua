@@ -40,7 +40,6 @@ local function space(weak, index, tuples)
 
 	--find a matching tuple by going through the index tree.
 	local function find(n, ...)
-		local t = {}
 		local index = index
 		for i = 1, n do
 			local k = tokey(select(i, ...))
@@ -54,6 +53,7 @@ local function space(weak, index, tuples)
 
 	--add a new tuple to the index tree.
 	local function add(n, tuple)
+		tuple.n = n
 		local index = index
 		for i = 1, n do
 			local k = tokey(tuple[i])
@@ -74,14 +74,14 @@ local function space(weak, index, tuples)
 	--get a matching tuple, or make a new one and add it to the index.
 	local function tuple_vararg(...)
 		local n = select('#', ...)
-		return find(n, ...) or add(n, {n = n, ...})
+		return find(n, ...) or add(n, {...})
 	end
 
 	--same as above, but for a fixed number of elements.
 	local function tuple_narg(n, ...)
 		local tuple = find(n, ...)
 		if not tuple then
-			tuple = {n = n}
+			tuple = {}
 			for i = 1, n do
 				tuple[i] = select(i, ...)
 			end
@@ -96,7 +96,31 @@ local function space(weak, index, tuples)
 		return find(n, unpack(tuple, 1, n)) or add(n, tuple)
 	end
 
-	return tuple_vararg, tuple_narg, tuple_array
+	local function iterate()
+		return coroutine.wrap(function()
+			for _,v in pairs(tuples) do
+				coroutine.yield(v)
+			end
+		end)
+	end
+
+	--remove an existing tuple, found by previously by creating it or from iteration.
+	local function remove_from(index, t, i)
+		local k = tokey(t[i])
+		local index1 = index[k]
+		if index1 then
+			return remove_from(index1, t, i+1) --tail call
+		else
+			tuples[index] = nil
+			index[k] = nil
+		end
+	end
+
+	local function remove(t)
+		return remove_from(index, t, 1)
+	end
+
+	return tuple_vararg, tuple_narg, tuple_array, iterate, remove
 end
 
 --tuple class
@@ -136,7 +160,7 @@ end
 local space_module
 
 function space_module(weak, ...)
-	local tuple_vararg, tuple_narg, tuple_array = space(weak, ...)
+	local tuple_vararg, tuple_narg, tuple_array, iterate, remove = space(weak, ...)
 	return setmetatable({
 		space = space_module,
 		narg = function(n, ...)
@@ -145,6 +169,8 @@ function space_module(weak, ...)
 		from_array = function(t)
 			return wrap(tuple_array(t))
 		end,
+		tuples = iterate,
+		remove = remove,
 	}, {
 		__call = function(_, ...)
 			return wrap(tuple_vararg(...))

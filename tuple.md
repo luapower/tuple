@@ -14,6 +14,8 @@ for the exact same list of identities.
 `tuple(e1,...) -> t`               get a tuple
 `tuple.narg(n,e1,...) -> t`        get a tuple with a fixed number of elements
 `tuple.from_array{n=,e1,...} -> t` get a tuple from a (sparse) array
+`tuple.tuples() -> iter() -> t`    iterate tuples in tuple space
+`tuple.remove(t)`                  remove existing tuple
 `t([i[, j]) -> e1,...`             unpack elements
 `t[i] -> ei`                       access elements
 `t.n`                              number of elements
